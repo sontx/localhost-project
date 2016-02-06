@@ -1,0 +1,6 @@
+    <!-- begin helper with bootboxjs theme -->
+    <%@include file="../_helper_non_theme.jspf"%>
+    <%@include file="../_support_tooltip.jspf"%>
+    <link rel="stylesheet" type="text/css" href="../css/bootboxjs.css" />
+    <!-- end helper with bootboxjs theme -->
+    

@@ -1,0 +1,70 @@
+<%@page import="in.sontx.web.local.Config"%>
+<%@page import="in.sontx.web.local.bean.Account"%>
+<%@page import="in.sontx.web.local.controller.BaseServlet"%>
+
+    <%@include file="../_helper.jspf"%>
+
+    <%
+        if (!_request.hasSessionAttribute("account", Account.class)) {
+            BaseServlet.sendRedirect(_response, "welcome");
+            return;
+        }
+        Account account = (Account) _request.getSessionAttribute("account");
+        int activeId = (Integer) _request.popAttribute("activeId", new Integer(-1));
+        String activeName = (String) _request.popAttribute("activeName", "");
+        String activeDescription = (String) _request.popAttribute("activeDescription", ""); 
+        String[] classes = {"", "", "", "", ""};
+        if (activeId > -1)
+            classes[activeId] = "class=\"active\"";
+    %>
+    
+    <div class="navbar navbar-inverse" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-bb-collapse">
+                    <span class="sr-only">Toggle navigation</span> 
+                    <span class="icon-bar"></span> 
+                    <span class="icon-bar"></span> 
+                    <span class="icon-bar"></span>
+                </button>
+                <a id=top class="navbar-brand navbar-brand-active" href="./"><%=Config.WEB_NAME%></a>
+            </div>
+            <div class="collapse navbar-collapse navbar-bb-collapse">
+                <ul class="nav navbar-nav">
+                    <li <%=classes[0]%>><a href="note">Quick note</a></li>
+                    <li <%=classes[1]%>><a href="shared">Shared box</a></li>
+                    <li <%=classes[2]%>><a href="serect">Serect box</a></li>
+                    <li <%=classes[3]%>><a href="codebin">Codebin</a></li>
+                    <li <%=classes[4]%>><a href="http://www.sontx.in">About</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="profile"><%=account.getUserName()%></a></li>
+                    <li><a href="login?req=logout">Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="content" class="bb-docs-header" tabindex="-1">
+        <%
+            if (activeId < 0) {
+        %>
+        <div class="container text-center">
+            <div class="bb-masthead">
+                <h1><%=Config.WEB_NAME%></h1>
+                <p>Keep everything in your computer.</p>
+            </div>
+        </div>
+        <%
+            } else {
+        %>
+            <div class="container">
+                <h1><%=activeName%></h1>
+                <p>
+                    <%=activeDescription%>
+                </p>
+        </div>
+        <%
+            }
+        %>
+    </div>
