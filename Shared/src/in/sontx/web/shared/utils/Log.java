@@ -10,8 +10,14 @@ public final class Log {
 
 	public static void e(Object obj) {
 		String msg = obj != null ? obj.toString() : "NULL";
-		if (obj instanceof Throwable)
-			msg = obj.toString() + System.lineSeparator() + msg;
+		if (obj instanceof Throwable) {
+			StackTraceElement[] elements = ((Throwable) obj).getStackTrace();
+			StringBuilder builder = new StringBuilder();
+			for (StackTraceElement element : elements) {
+				builder.append(String.format("\t%s\n", element.toString()));
+			}
+			msg += System.lineSeparator() + builder.toString();
+		}
 		logable.err(msg);
 	}
 

@@ -40,8 +40,7 @@ function changePassword(id) {
 		<%
 			if (_request.hasSessionAttribute("account", AdminAccount.class)) {
 				if (_request.hasAttribute("result", Boolean.class)) {
-					boolean result = (Boolean) _request.getAttribute("result");
-					_request.removeAttribute("result");
+					boolean result = (Boolean) _request.popAttribute("result", Boolean.FALSE);
 					if (!result) {
 		%>
 			<span style="color: red">Can not create new account!</span>
@@ -49,7 +48,7 @@ function changePassword(id) {
 		<%
 					}
 				}
-				List<Account> accounts = ResourceManager.getInstance().globalMgr.getAccounts();
+				List<Account> accounts = ResourceManager.getInstance().getAccountMgr().getAllAccounts();
 				if (accounts == null || accounts.size() == 0) {
 		%>
 		No account!
@@ -58,7 +57,7 @@ function changePassword(id) {
 		%>
 		<table border="1">
 			<tr>
-				<th>Id</th>
+				<th>No.</th>
 				<th>User name</th>
 				<th>User dir</th>
 				<th>Last login</th>
@@ -67,17 +66,17 @@ function changePassword(id) {
 			<%
 					for (int i = 0; i < accounts.size(); i++) {
 						Account account = accounts.get(i);
-						AccountInfo info = ResourceManager.getInstance().globalMgr.getAccountInfo(account.getUserId());
+						AccountInfo info = ResourceManager.getInstance().getAccountMgr().getAccountInfo(account.getId());
 						if (info != null) {
 			%>
 			<tr>
-				<td><%=account.getUserId()%></td>
+				<td><%=i%></td>
 				<td><%=account.getUserName()%></td>
 				<td><%=info.getUserDir()%></td>
 				<td><%=DateTime.parse(info.getLastLogin()).toString()%></td>
 				<td>
-					<a href="manager" onclick="return changePassword(<%=account.getUserId()%>)">Password</a>
-					<a href="manager?req=da&userid=<%=account.getUserId()%>" onclick="return confirm('Delete <%=account.getUserName()%>, sure?')">Delete</a>
+					<a href="manager" onclick="return changePassword(<%=account.getId()%>)">Password</a>
+					<a href="manager?req=da&userid=<%=account.getId()%>" onclick="return confirm('Delete <%=account.getUserName()%>, sure?')">Delete</a>
 				</td>
 			</tr>
 			<%

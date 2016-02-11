@@ -3,18 +3,11 @@ package in.sontx.web.local.bean;
 import com.sun.istack.internal.NotNull;
 
 public class Note {
-	private int id;
+	private String id;
 	private String title;
 	private String content;
 	private int created;
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
+	private int modified;
 
 	@NotNull
 	public String getTitle() {
@@ -40,5 +33,21 @@ public class Note {
 
 	public void setCreated(int created) {
 		this.created = created;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public int getModified() {
+		return modified;
+	}
+
+	public void setModified(int modified) {
+		this.modified = modified;
 	}
 }

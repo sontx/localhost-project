@@ -23,7 +23,7 @@ public class LoginServlet extends BaseServlet {
 		} else if ("cl".equals(req)) {// check login
 			String username = request.getParameter("username");
 			String password = request.getParameter("password");
-			Account account = ResourceManager.getInstance().globalMgr.getAccount(username, password);
+			Account account = ResourceManager.getInstance().getAccountMgr().getAccount(username, password);
 			if (account != null) {
 				request.createSession();
 				request.setSessionAttribute("account", account);

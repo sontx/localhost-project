@@ -19,19 +19,19 @@ public class ManagerServlet extends BaseServlet {
 	private Rule adminRule = new AdminRule();
 
 	private boolean createAccount(String username, String password) {
-		return ResourceManager.getInstance().globalMgr.createAccount(username, password) != null;
+		return ResourceManager.getInstance().getAccountMgr().createAccount(username, password);
 	}
 
 	private boolean checkAdminLogin(String username, String password) {
 		return true;
 	}
 
-	private boolean changePassword(int userId, String newPassword) {
-		return ResourceManager.getInstance().globalMgr.changeAccountPassword(userId, newPassword);
+	private boolean changePassword(String userId, String newPassword) {
+		return ResourceManager.getInstance().getAccountMgr().changePassword(userId, newPassword);
 	}
 
-	private boolean deleteAccount(int userId) {
-		return ResourceManager.getInstance().globalMgr.deleteAccount(userId);
+	private boolean deleteAccount(String userId) {
+		return ResourceManager.getInstance().getAccountMgr().deleteAccount(userId);
 	}
 
 	private void showLogin(HttpServletRequestWrapper request, HttpServletResponseWrapper response)
@@ -77,14 +77,14 @@ public class ManagerServlet extends BaseServlet {
 	private void changePassword(HttpServletRequestWrapper request, HttpServletResponseWrapper response)
 			throws ServletException, IOException {
 		String newPassword = request.getParameter("np");
-		int userId = request.getInt("userid", -1);
+		String userId = request.getParameter("userid");
 		boolean result = changePassword(userId, newPassword);
 		responseResult(response, result ? RESULT_OK : RESULT_FAIL);
 	}
 
 	private void deleteAccount(HttpServletRequestWrapper request, HttpServletResponseWrapper response)
 			throws ServletException, IOException {
-		int userId = request.getInt("userid", -1);
+		String userId = request.getParameter("userid");
 		deleteAccount(userId);
 		sendRedirect(response, "manager");
 	}

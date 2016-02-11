@@ -1,17 +1,10 @@
 package in.sontx.web.local.bean;
 
+import com.sun.istack.internal.NotNull;
+
 public class AccountInfo {
-	private int userId;
 	private int lastLogin;
 	private String userDir;
-
-	public int getUserId() {
-		return userId;
-	}
-
-	public void setUserId(int userId) {
-		this.userId = userId;
-	}
 
 	public int getLastLogin() {
 		return lastLogin;
@@ -21,11 +14,12 @@ public class AccountInfo {
 		this.lastLogin = lastLogin;
 	}
 
+	@NotNull
 	public String getUserDir() {
 		return userDir;
 	}
 
-	public void setUserDir(String userDir) {
+	public void setUserDir(@NotNull String userDir) {
 		this.userDir = userDir;
 	}
 }

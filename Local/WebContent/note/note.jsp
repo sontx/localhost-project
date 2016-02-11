@@ -1,7 +1,6 @@
 <%@page import="in.sontx.web.local.bean.Account"%>
 <%@page import="in.sontx.web.shared.utils.Convert"%>
 <%@page import="in.sontx.web.local.controller.BaseServlet"%>
-<%@page import="in.sontx.web.local.sample.NoteSample"%>
 <%@page import="in.sontx.web.local.bean.Note"%>
 <%@page import="java.util.List"%>
 <%@page import="in.sontx.web.shared.utils.DateTime"%>

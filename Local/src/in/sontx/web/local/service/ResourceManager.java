@@ -1,22 +1,24 @@
 package in.sontx.web.local.service;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
 
 import in.sontx.web.local.Config;
 import in.sontx.web.local.bean.Account;
-import in.sontx.web.local.bean.AccountInfo;
-import in.sontx.web.local.bo.GlobalMgr;
-import in.sontx.web.local.bo.UserMgr;
-import in.sontx.web.local.dao.sqlite.GlobalSQLiteDbConnection;
-import in.sontx.web.local.dao.sqlite.UserSQLiteDbConnection;
+import in.sontx.web.local.bo.AccountMgr;
+import in.sontx.web.local.bo.NoteMgr;
+import in.sontx.web.local.dao.mysql.MySQLDbConnection;
+import in.sontx.web.shared.dao.ISQLConnection;
+import in.sontx.web.shared.utils.FileManager;
 import in.sontx.web.shared.utils.Log;
-import in.sontx.web.shared.utils.Path;
 
 public final class ResourceManager {
 	private static ResourceManager instance;
-	public final GlobalMgr globalMgr;
-	private final HashMap<String, UserMgr> userMap = new HashMap<>();
+	private ISQLConnection connection;
+	private final AccountMgr accountMgr;
+	private final HashMap<String, UserModuleHolder> userMap = new HashMap<>();
+	private FileManager fileManager;
 
 	public static void createInstance() {
 		instance = new ResourceManager();
@@ -33,49 +35,56 @@ public final class ResourceManager {
 		}
 	}
 
-	public boolean generateUserSession(Account account, String sessionId) {
-		AccountInfo accountInfo = globalMgr.getAccountInfo(account.getUserId());
-		if (accountInfo != null) {
-			String userDir = accountInfo.getUserDir();
-			String dbFilePath = Path.combine(Config.WORKING_DIR, userDir, Config.USER_DATABASE_FILE);
-			UserMgr userMgr = new UserMgr(new UserSQLiteDbConnection(dbFilePath));
-			try {
-				userMgr.open();
-				userMap.put(sessionId, userMgr);
-				return true;
-			} catch (SQLException e) {
-				userMgr.close();
-				Log.e(e);
-			}
+	public AccountMgr getAccountMgr() {
+		return accountMgr;
+	}
+
+	public FileManager getFileManager() {
+		return fileManager;
+	}
+
+	public void generateUserSession(Account account, String sessionId) {
+		if (account != null && sessionId != null) {
+			NoteMgr noteMgr = new NoteMgr(connection, account.getId());
+			UserModuleHolder holder = new UserModuleHolder(noteMgr);
+			userMap.put(sessionId, holder);
 		}
-		return false;
 	}
 
 	public void destroyUserSession(String sessionId) {
-		if (sessionId != null) {
-			UserMgr userMgr = userMap.get(sessionId);
-			if (userMgr != null) {
-				userMgr.close();
-				userMap.remove(sessionId);
-			}
-		}
+		if (sessionId != null)
+			userMap.remove(sessionId);
 	}
 
-	public UserMgr getUserSession(String sessionId) {
-		return userMap.get(sessionId);
+	public NoteMgr getNoteMgr(String sessionId) {
+		return userMap.containsKey(sessionId) ? userMap.get(sessionId).noteMgr : null;
 	}
 
 	private void release() {
-		globalMgr.close();
-		for (String key : userMap.keySet()) {
-			UserMgr userMgr = userMap.get(key);
-			userMgr.close();
-		}
+		connection.close();
 		userMap.clear();
 	}
 
 	ResourceManager() {
-		globalMgr = new GlobalMgr(new GlobalSQLiteDbConnection(Config.GLOBAL_DATABASE_PATH));
-		globalMgr.open();
+		try {
+			fileManager = new FileManager(Config.WORKING_DIR);
+		} catch (IOException e) {
+			Log.e(e);
+		}
+		try {
+			connection = new MySQLDbConnection();
+			connection.open();
+		} catch (ClassNotFoundException | SQLException e) {
+			Log.e(e);
+		}
+		accountMgr = AccountMgr.createInstance(connection);
+	}
+
+	private static class UserModuleHolder {
+		public final NoteMgr noteMgr;
+
+		public UserModuleHolder(NoteMgr noteMgr) {
+			this.noteMgr = noteMgr;
+		}
 	}
 }

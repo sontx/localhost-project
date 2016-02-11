@@ -1,22 +1,35 @@
 package in.sontx.web.local.dao;
 
 public final class TableInfo {
-	public static final String GLOBAL_ACCOUNT_TABLE_NAME = "tbAccount";
-	public static final String GLOBAL_ACCOUNT_TABLE_STRUCT = "CREATE TABLE \"tbAccount\"" +
-															 "(\"userId\" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL ," +
-															 "\"userName\" VARCHAR(50) NOT NULL  UNIQUE ," + 
-															 "\"passwordHash\" VARCHAR(2000) NOT NULL )";
-	public static final String GLOBAL_ACCINFO_TABLE_NAME = "tbAccountInfo";
-	public static final String GLOBAL_ACCINFO_TABLE_STRUCT = "CREATE TABLE \"tbAccountInfo\" " + 
-															 "(\"userId\" INTEGER PRIMARY KEY  NOT NULL  UNIQUE ," +
-															 "\"lastLogin\" INTEGER NOT NULL ," +
-															 "\"userDir\" VARCHAR(255) NOT NULL )";
-	public static final String USER_NOTE_TABLE_NAME = "tbNote";
-	public static final String USER_NOTE_TABLE_STRUCT = "CREATE TABLE \"tbNote\"" +
-														"(\"id\" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL ," +
-														"\"title\" VARCHAR(255) NOT NULL ," +
-														"\"content\" VARCHAR(4000) NOT NULL ," + 
-														"\"created\" INT4 NOT NULL )";
+	public static final String ACCOUNT_TABLE_NAME = "account";
+	public static final String ACCOUNT_TABLE_STRUCT = "CREATE TABLE account ("
+													  + "id char(32) NOT NULL,"
+													  + "username varchar(15) NOT NULL," 
+													  + "password_hash varchar(1000) NOT NULL," 
+													  + "PRIMARY KEY (id),"
+													  + "UNIQUE KEY id_UNIQUE (id)," 
+													  + "UNIQUE KEY username_UNIQUE (username))";
+
+	public static final String ACCOUNT_INFO_TABLE_NAME = "account_info";
+	public static final String ACCOUNT_INFO_TABLE_STRUCT = "CREATE TABLE account_info ("
+														   + "user_id char(32) NOT NULL,"
+														   + "last_login int(10) unsigned NOT NULL,"
+														   + "user_dir char(32) NOT NULL,"
+														   + "PRIMARY KEY (user_id),"
+														   + "CONSTRAINT fk_acc_info FOREIGN KEY (user_id) REFERENCES account (id))";
+
+	public static final String NOTE_TABLE_NAME = "note";
+	public static final String NOTE_TABLE_STRUCT = "CREATE TABLE note ("
+												   + "id char(32) NOT NULL,"
+												   + "title varchar(255) NOT NULL,"
+												   + "content varchar(4000) NOT NULL,"
+												   + "created int(11) NOT NULL,"
+												   + "modified int(11) NOT NULL,"
+												   + "user_id char(32) NOT NULL,"
+												   + "PRIMARY KEY (id),"
+												   + "UNIQUE KEY id_UNIQUE (id),"
+												   + "KEY fk_note (user_id),"
+												   + "CONSTRAINT fk_note FOREIGN KEY (user_id) REFERENCES account (id))";
 
 	TableInfo() {
 	}

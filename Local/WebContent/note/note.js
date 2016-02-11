@@ -15,13 +15,13 @@ function createNote() {
 			+ '<label class="col-md-2 control-label" for="title">Title</label> '
 			+ '<div class="col-md-10"> '
 			+ '<input name="req" type="hidden" value="add"> '
-			+ '<input id="title" name="title" type="text" placeholder="Note title" class="form-control input-md"> '
+			+ '<input id="__title" name="title" type="text" placeholder="Note title" class="form-control input-md"> '
 			+ '</div> '
 			+ '</div> '
 			+ '<div class="form-group"> '
 			+ '<label class="col-md-2 control-label" for="content">Content</label> '
 			+ '<div class="col-md-10"> '
-			+ '<textarea id="content" rows="10" name="content" placeholder="Note content" class="form-control input-md" style="resize:vertical;"></textarea> '
+			+ '<textarea id="__content" rows="10" name="content" placeholder="Note content" class="form-control input-md" style="resize:vertical;"></textarea> '
 			+ '</div> '
 			+ '</div> '
 			+ '<div class="form-group"> '
@@ -37,8 +37,8 @@ function createNote() {
 				label : "Add",
 				className : "btn-success",
 				callback : function() {
-					var _title = $('#title').val().trim();
-					var _content = $('#content').val().trim();
+					var _title = $('#__title').val().trim();
+					var _content = $('#__content').val().trim();
 					console.log(checkNote(_title, _content));
 					if (checkNote(_title, _content)) {
 						$.ajax({
