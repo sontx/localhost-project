@@ -7,6 +7,7 @@ import java.util.HashMap;
 import in.sontx.web.local.Config;
 import in.sontx.web.local.bean.Account;
 import in.sontx.web.local.bo.AccountMgr;
+import in.sontx.web.local.bo.FileMgr;
 import in.sontx.web.local.bo.NoteMgr;
 import in.sontx.web.local.dao.mysql.MySQLDbConnection;
 import in.sontx.web.shared.dao.ISQLConnection;
@@ -46,7 +47,8 @@ public final class ResourceManager {
 	public void generateUserSession(Account account, String sessionId) {
 		if (account != null && sessionId != null) {
 			NoteMgr noteMgr = new NoteMgr(connection, account.getId());
-			UserModuleHolder holder = new UserModuleHolder(noteMgr);
+			FileMgr fileMgr = new FileMgr(connection, account.getId());
+			UserModuleHolder holder = new UserModuleHolder(noteMgr, fileMgr);
 			userMap.put(sessionId, holder);
 		}
 	}
@@ -58,6 +60,10 @@ public final class ResourceManager {
 
 	public NoteMgr getNoteMgr(String sessionId) {
 		return userMap.containsKey(sessionId) ? userMap.get(sessionId).noteMgr : null;
+	}
+	
+	public FileMgr getFileMgr(String sessionId) {
+		return userMap.containsKey(sessionId) ? userMap.get(sessionId).fileMgr : null;
 	}
 
 	private void release() {
@@ -82,9 +88,11 @@ public final class ResourceManager {
 
 	private static class UserModuleHolder {
 		public final NoteMgr noteMgr;
+		public final FileMgr fileMgr;
 
-		public UserModuleHolder(NoteMgr noteMgr) {
+		public UserModuleHolder(NoteMgr noteMgr, FileMgr fileMgr) {
 			this.noteMgr = noteMgr;
+			this.fileMgr = fileMgr;
 		}
 	}
 }

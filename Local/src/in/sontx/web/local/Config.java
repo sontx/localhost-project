@@ -8,6 +8,9 @@ public final class Config {
 	public static final String WEB_AUTHOR_LINK = "http://www.sontx.in";
 	public static final String ACCOUNT_USERNAME_PATTERN = "^[a-z0-9_-]{3,15}$";
 	public static final String ACCOUNT_PASSWORD_PATTERN = "^[a-z0-9_-]{6,40}$";
+	public static final String FILE_NAME_PATTERN = "^[\\w,\\s-]+\\.[A-Za-z]{3}$";
+	public static final long FILE_SIZE_MAX_SUPPORTED = 25 * 1024 * 1024 * 1024;// 25Mb
+	public static final int FILE_BUFFER = 32 * 1024;
 	public static final String WORKING_DIR = "e:/data/";
 	public static final String ADMIN_USERNAME = "admin";
 	public static final String ADMIN_PASSWORD = "admin";

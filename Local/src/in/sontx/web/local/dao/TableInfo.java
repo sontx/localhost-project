@@ -30,6 +30,21 @@ public final class TableInfo {
 												   + "UNIQUE KEY id_UNIQUE (id),"
 												   + "KEY fk_note (user_id),"
 												   + "CONSTRAINT fk_note FOREIGN KEY (user_id) REFERENCES account (id))";
+	
+	public static final String FILE_TABLE_NAME = "file";
+	public static final String FILE_TABLE_STRUCT = "CREATE TABLE file ("
+												   + "id char(32) NOT NULL,"
+												   + "origin_name varchar(500) NOT NULL,"
+												   + "raw_name varchar(255) NOT NULL,"
+												   + "size int(10) unsigned NOT NULL,"
+												   + "created int(10) unsigned NOT NULL,"
+												   + "type varchar(100) NOT NULL,"
+												   + "state tinyint(3) unsigned NOT NULL DEFAULT '0',"
+												   + "user_id char(32) NOT NULL,"
+												   + "PRIMARY KEY (id),"
+												   + "UNIQUE KEY id_UNIQUE (id),"
+												   + "KEY fk_user_id___idx (user_id),"
+												   + "CONSTRAINT fk_file FOREIGN KEY (user_id) REFERENCES account (id))";
 
 	TableInfo() {
 	}

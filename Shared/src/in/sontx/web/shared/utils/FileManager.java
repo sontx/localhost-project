@@ -4,11 +4,20 @@ import java.io.File;
 import java.io.IOException;
 
 public final class FileManager {
-	private File root;
+	private final File root;
 	
 	public File createDirectory(String dir) {
 		File file = new File(Path.combine(root.getPath(), dir));
 		return file.isDirectory() ? file : (file.mkdirs() ? file : null);
+	}
+	
+	public File createFile(String name) {
+		return new File(Path.combine(root.getPath(), name));
+	}
+	
+	public boolean deleteFile(String name) {
+		File file = new File(Path.combine(root.getPath(), name));
+		return file.delete();
 	}
 
 	public FileManager(String root) throws IOException {
