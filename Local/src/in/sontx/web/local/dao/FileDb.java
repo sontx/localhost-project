@@ -71,24 +71,20 @@ public final class FileDb {
 		return false;
 	}
 	
-	public Storage getFile(@NotNull String userId, @NotNull String id) {
-		final String sql = String.format(
-				"SELECT id, origin_name, raw_name, size, created, state WHERE user_id=%s AND id=%s", 
-				TableInfo.FILE_TABLE_NAME,
-				SQLHepler.prepareString(userId),
-				SQLHepler.prepareString(id));
+	private StorageEx getFileBySQLCommand(String sql, String id) {
 		ResultSetAdapter set = connection.executeQuery(sql);
 		if (set == null)
 			return null;
 		try {
 			if (set.next()) {
-				Storage storage = new Storage();
+				StorageEx storage = new StorageEx();
 				storage.setId(id);
 				storage.setOriginName(set.getString("origin_name"));
 				storage.setRawName(set.getString("raw_name"));
 				storage.setSize(set.getInt("size"));
 				storage.setCreated(set.getInt("created"));
 				storage.setState((byte) set.getInt("state"));
+				storage.setOwner(set.getString("user_id"));
 				return storage;
 			}
 		} catch (SQLException e) {
@@ -100,6 +96,23 @@ public final class FileDb {
 			}
 		}
 		return null;
+	}
+	
+	public Storage getFile(@NotNull String userId, @NotNull String id) {
+		final String sql = String.format(
+				"SELECT origin_name, raw_name, size, created, state, user_id WHERE user_id=%s AND id=%s LIMIT 1", 
+				TableInfo.FILE_TABLE_NAME,
+				SQLHepler.prepareString(userId),
+				SQLHepler.prepareString(id));
+		return getFileBySQLCommand(sql, id);
+	}
+	
+	public StorageEx getFile(@NotNull String id) {
+		final String sql = String.format(
+				"SELECT origin_name, raw_name, size, created, state, user_id WHERE id=%s LIMIT 1", 
+				TableInfo.FILE_TABLE_NAME,
+				SQLHepler.prepareString(id));
+		return getFileBySQLCommand(sql, id);
 	}
 	
 	private List<Storage> getFiles(@NotNull String sql) {

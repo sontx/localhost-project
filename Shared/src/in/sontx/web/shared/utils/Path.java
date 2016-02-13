@@ -7,8 +7,8 @@ public final class Path {
 			part = part.substring(0, part.length() - 1);
 		return part;
 	}
-
-	public static String combine(String... args) throws IllegalArgumentException {
+	
+	public static String combineByArray(String[] args) throws IllegalArgumentException {
 		if (args.length == 0)
 			throw new IllegalArgumentException("Arguments are nothing!");
 		StringBuilder builder = new StringBuilder();
@@ -17,6 +17,10 @@ public final class Path {
 		}
 		builder.append(validPart(args[args.length - 1]));
 		return builder.toString();
+	}
+
+	public static String combine(String... args) throws IllegalArgumentException {
+		return combineByArray(args);
 	}
 
 	public static boolean isName(String arg) {

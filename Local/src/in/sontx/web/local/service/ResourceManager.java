@@ -8,6 +8,7 @@ import in.sontx.web.local.Config;
 import in.sontx.web.local.bean.Account;
 import in.sontx.web.local.bo.AccountMgr;
 import in.sontx.web.local.bo.FileMgr;
+import in.sontx.web.local.bo.GuestFileMgr;
 import in.sontx.web.local.bo.NoteMgr;
 import in.sontx.web.local.dao.mysql.MySQLDbConnection;
 import in.sontx.web.shared.dao.ISQLConnection;
@@ -18,6 +19,7 @@ public final class ResourceManager {
 	private static ResourceManager instance;
 	private ISQLConnection connection;
 	private final AccountMgr accountMgr;
+	private final GuestFileMgr guestFileMgr;
 	private final HashMap<String, UserModuleHolder> userMap = new HashMap<>();
 	private FileManager fileManager;
 
@@ -65,6 +67,10 @@ public final class ResourceManager {
 	public FileMgr getFileMgr(String sessionId) {
 		return userMap.containsKey(sessionId) ? userMap.get(sessionId).fileMgr : null;
 	}
+	
+	public GuestFileMgr getGuestFileMgr() {
+		return guestFileMgr;
+	}
 
 	private void release() {
 		connection.close();
@@ -84,6 +90,7 @@ public final class ResourceManager {
 			Log.e(e);
 		}
 		accountMgr = AccountMgr.createInstance(connection);
+		guestFileMgr = new GuestFileMgr(connection);
 	}
 
 	private static class UserModuleHolder {

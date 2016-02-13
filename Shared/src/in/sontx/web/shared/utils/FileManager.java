@@ -11,8 +11,11 @@ public final class FileManager {
 		return file.isDirectory() ? file : (file.mkdirs() ? file : null);
 	}
 	
-	public File createFile(String name) {
-		return new File(Path.combine(root.getPath(), name));
+	public File openFile(String...names) {
+		String[] array = new String[1 + names.length];
+		array[0] = root.getPath();
+		System.arraycopy(names, 0, array, 1, names.length);
+		return new File(Path.combineByArray(array));
 	}
 	
 	public boolean deleteFile(String name) {
